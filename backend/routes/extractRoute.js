@@ -1,4 +1,4 @@
-const { log } = require('console');
+// const { log } = require('console');
 const express = require('express')
 
 const router = express.Router()
@@ -28,16 +28,18 @@ async function extract(url) {
 
 router.post('/fetch-emails', async (req, res) => {
     try {
-        const { startIndex, endIndex } = req.body;
+        const { startIndex, endIndex, url } = req.body;
 
         async function fetchAll(startIndex, endIndex) {
             const promises = [];
 
             for (let i = startIndex; i <= endIndex; i++) {
-                let url = `https://www.epch.in/index.php?option=com_jumi&fileid=4&Itemid=162&page=${i}`;
-                console.log(url);
+                // let url = `https://www.epch.in/index.php?option=com_jumi&fileid=4&Itemid=162&page=${i}`;
+                // let url1 = `${url}`
+               let url1 = url.replace("surabhi", `${i}`);
+                console.log(url1);
                 console.log(i);
-                promises.push(extract(url));
+                promises.push(extract(url1));
             }
 
             await Promise.all(promises);

@@ -1,28 +1,48 @@
 // EmailExtractor.js
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const EmailExtractor = () => {
   const [startIndex, setStartIndex] = useState('');
   const [endIndex, setEndIndex] = useState('');
-  const [userWithVariables, setUserWithVariables] = useState('');
+  const [url, seturl] = useState('');
   const [fileContent, setFileContent] = useState('');
 
   const handleFetchEmails = async (e) => {
-    console.log('xyz,,,,,,,,');
     e.preventDefault();
-    console.log('xyz,,,,,,,,');
-    // Perform API call to fetch emails from the backend
-    const response = await fetch('http://localhost:3001/fetch-emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ startIndex, endIndex, userWithVariables }),
-    });
-    
-    const data = await response.json();
-    setFileContent(data.emails);
+  
+    try {
+      // const response = await fetch('http://localhost:5000/api/extract/fetch-emails', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ startIndex, endIndex, url }),
+      // });
+      let body = {
+        startIndex:startIndex,
+        endIndex:endIndex,
+        url:url
+      }
+      const response = await axios.post('http://localhost:5000/api/extract/fetch-emails', body);
+            const result = response.data;
+            console.log(result);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch emails');
+      }
+  
+      const data = await response.json();
+      setFileContent(data.emails);
+  
+      // Display success message
+      console.log('All emails are extracted from the URL successfully');
+    } catch (error) {
+      console.error('Error fetching emails:', error.message);
+      // Handle error, display error message, or take appropriate action
+    }
   };
+  
 
   const handleDownloadFile = () => {
     // Logic to trigger file download
@@ -64,14 +84,14 @@ const EmailExtractor = () => {
 
         <div className="mb-3">
           <label htmlFor="userWithVariables" className="form-label">
-            User with Variables
+            URL
           </label>
           <input
             type="text"
             className="form-control"
             id="userWithVariables"
-            value={userWithVariables}
-            onChange={(e) => setUserWithVariables(e.target.value)}
+            value={url}
+            onChange={(e) => seturl(e.target.value)}
           />
         </div>
 

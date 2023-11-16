@@ -8,6 +8,21 @@ const path = require('path');
 app.use(express.json())
 app.use('/api/extract', extractRoute)
 
+const cors = require('cors')
+
+app.use(cors (
+ {
+	origin:"http://localhost:3000",
+	credentials:true,
+  }
+))
+
+app.use((_req, res, next) => {
+    res.header('Access-Control-Allow-Origin',`${process.env.React_ORIGIN}`);
+    res.header('Access-Control-Allow-Headers', '*');
+  
+    next();
+  });
 // async function extract(url) {
 //     try {
 //         const data = await email.url(url);
