@@ -24,16 +24,35 @@ const EmailExtractor = () => {
         endIndex:endIndex,
         url:url
       }
-      const response = await axios.post('http://localhost:5000/api/extract/fetch-emails', body);
-            const result = response.data;
-            console.log(result);
+      // const response = await axios.post('http://localhost:3001/api/extract/fetch-emails', body);
+      //       const result = response.data;
+      //       console.log(result);
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch emails');
-      }
+      // if (!response.ok) {
+      //   throw new Error('Failed to fetch emails');
+      // }
+
+      fetch('http://localhost:3001/api/extract/fetch-emails', {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        method: 'POST',
+        credentials: 'include',
+        body: new URLSearchParams({
+          'startIndex': startIndex,
+          'endIndex': endIndex,
+          'url':url
+        })
+      })
+        .then(response => {
+          return response.json()
+        }).then(data => {
+          console.log(data);
+        })
   
-      const data = await response.json();
-      setFileContent(data.emails);
+      // const data = await response.json();
+      // setFileContent(data.emails);
   
       // Display success message
       console.log('All emails are extracted from the URL successfully');

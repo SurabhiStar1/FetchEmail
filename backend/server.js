@@ -1,4 +1,5 @@
 const express = require('express');
+const dotenv = require("dotenv").config();
 const extractRoute = require('./routes/extractRoute')
 
 const app = express();
@@ -10,19 +11,22 @@ app.use('/api/extract', extractRoute)
 
 const cors = require('cors')
 
+
+
 app.use(cors (
  {
-	origin:"http://localhost:3000",
+	origin:`${process.env.React_ORIGIN}`,
 	credentials:true,
   }
 ))
-
 app.use((_req, res, next) => {
     res.header('Access-Control-Allow-Origin',`${process.env.React_ORIGIN}`);
     res.header('Access-Control-Allow-Headers', '*');
   
     next();
   });
+
+
 // async function extract(url) {
 //     try {
 //         const data = await email.url(url);
