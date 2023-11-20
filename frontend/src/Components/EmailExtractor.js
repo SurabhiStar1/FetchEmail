@@ -6,71 +6,56 @@ const EmailExtractor = () => {
   const [startIndex, setStartIndex] = useState('');
   const [endIndex, setEndIndex] = useState('');
   const [url, seturl] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [fileNameDown, setFileNameDown] = useState('');
+  const [fileNameDel, setFileNameDel] = useState('');
   const [fileContent, setFileContent] = useState('');
 
   const handleFetchEmails = async (e) => {
     e.preventDefault();
   
     try {
-      // const response = await fetch('http://localhost:5000/api/extract/fetch-emails', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({ startIndex, endIndex, url }),
-      // });
       let body = {
-        startIndex:startIndex,
-        endIndex:endIndex,
-        url:url
+        startIndex: startIndex,
+        endIndex: endIndex,
+        url: url
       }
-      // const response = await axios.post('http://localhost:3001/api/extract/fetch-emails', body);
-      //       const result = response.data;
-      //       console.log(result);
-
-      // if (!response.ok) {
-      //   throw new Error('Failed to fetch emails');
-      // }
-
-      fetch('http://localhost:3001/api/extract/fetch-emails', {
+      fetch('http://localhost:3001/api/fetch-emails', {
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/json'
         },
         method: 'POST',
         credentials: 'include',
-        body: new URLSearchParams({
+        body: JSON.stringify({
           'startIndex': startIndex,
           'endIndex': endIndex,
-          'url':url
+          'url': url,
+          "fileName": fileName
         })
       })
         .then(response => {
+          console.log("response", response);
           return response.json()
         }).then(data => {
           console.log(data);
         })
-  
-      // const data = await response.json();
-      // setFileContent(data.emails);
-  
-      // Display success message
       console.log('All emails are extracted from the URL successfully');
     } catch (error) {
       console.error('Error fetching emails:', error.message);
       // Handle error, display error message, or take appropriate action
     }
   };
-  
 
   const handleDownloadFile = () => {
-    // Logic to trigger file download
-    // You can use a library like FileSaver.js for this
+    window.open(`http://localhost:3001/api/download/${fileNameDown}`, '_blank');
   };
 
-  const handleClearFile = () => {
-    setFileContent('');
+  const handleDeleteFile = () => {
+    console.log(`http://localhost:3001/api/delete/${fileNameDel}`);
+    window.open(`http://localhost:3001/api/delete/${fileNameDel}`, '_blank');
   };
+console.log(fileNameDel);
 
   return (
     <div className="container mt-5">
@@ -113,24 +98,61 @@ const EmailExtractor = () => {
             onChange={(e) => seturl(e.target.value)}
           />
         </div>
+        <div className="mb-3">
+          <label htmlFor="fileName" className="form-label">
+            fileName
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="fileName"
+            value={fileName}
+            onChange={(e) => setFileName(e.target.value)}
+          />
+        </div>
 
         <button type="submit" className="btn btn-primary">
           Submit
         </button>
       </form>
+      <br />
 
-      <div className="mt-3">
-        <button className="btn btn-success" onClick={handleDownloadFile}>
+      <form onSubmit={(e) => {e.preventDefault();handleDownloadFile();}}>
+        <div className="mb-3">
+          <label htmlFor="fileNameDown" className="form-label">
+          fileNameDown
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="fileNameDown"
+            value={fileNameDown}
+            onChange={(e) => setFileNameDown(e.target.value)}
+          />
+        </div>
+        <button className="btn btn-success" >
           Download
         </button>
-        <button className="btn btn-danger ml-2" onClick={handleClearFile}>
-          Clear
-        </button>
-      </div>
+      </form>
+      <br />
 
-      <div className="mt-3">
-        <pre>{fileContent}</pre>
-      </div>
+      <form onSubmit={(e) => {e.preventDefault();handleDeleteFile();}}>
+        <div className="mb-3">
+          <label htmlFor="fileNameDel" className="form-label">
+          fileNameDelete
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="fileNameDel"
+            value={fileNameDel}
+            onChange={(e) => {setFileNameDel(e.target.value)}}
+          />
+        </div>
+        <button className="btn btn-danger ml-2">
+          Delete
+        </button>
+      </form>
     </div>
   );
 };
