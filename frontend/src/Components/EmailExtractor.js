@@ -1,6 +1,6 @@
 // EmailExtractor.js
 import React, { useState } from 'react';
-import axios from 'axios';
+const BackendUrl = process.env.BackendUrl
 
 const EmailExtractor = () => {
   const [startIndex, setStartIndex] = useState('');
@@ -9,7 +9,6 @@ const EmailExtractor = () => {
   const [fileName, setFileName] = useState('');
   const [fileNameDown, setFileNameDown] = useState('');
   const [fileNameDel, setFileNameDel] = useState('');
-  const [fileContent, setFileContent] = useState('');
 
   const handleFetchEmails = async (e) => {
     e.preventDefault();
@@ -20,7 +19,7 @@ const EmailExtractor = () => {
         endIndex: endIndex,
         url: url
       }
-      fetch('http://localhost:3001/api/fetch-emails', {
+      fetch(`${BackendUrl}/api/fetch-emails`, {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -48,12 +47,11 @@ const EmailExtractor = () => {
   };
 
   const handleDownloadFile = () => {
-    window.open(`http://localhost:3001/api/download/${fileNameDown}`, '_blank');
+    window.open(`${BackendUrl}/api/download/${fileNameDown}`, '_blank');
   };
 
   const handleDeleteFile = () => {
-    console.log(`http://localhost:3001/api/delete/${fileNameDel}`);
-    window.open(`http://localhost:3001/api/delete/${fileNameDel}`, '_blank');
+    window.open(`${BackendUrl}/api/delete/${fileNameDel}`, '_blank');
   };
 console.log(fileNameDel);
 
