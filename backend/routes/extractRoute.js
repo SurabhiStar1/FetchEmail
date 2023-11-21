@@ -41,7 +41,7 @@ router.post('/fetch-emails', async (req, res) => {
         console.log(startIndex, endIndex, url,fileName);
 
         for (let i = startIndex; i <= endIndex; i++) {
-            let url1 = url.replace("${surabhi}", i);
+            let url1 = url.replace("{index}", i);
             console.log(url1);
             console.log(i);
             promises.push(extract2(url1,fileName));

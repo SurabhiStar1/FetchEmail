@@ -1,6 +1,8 @@
 // EmailExtractor.js
 import React, { useState } from 'react';
-const BackendUrl = process.env.BackendUrl
+// const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL
+const REACT_APP_SERVER_URL = process.env.REACT_APP_SERVER_URL;
+console.log(REACT_APP_SERVER_URL);
 
 const EmailExtractor = () => {
   const [startIndex, setStartIndex] = useState('');
@@ -19,7 +21,7 @@ const EmailExtractor = () => {
         endIndex: endIndex,
         url: url
       }
-      fetch(`${BackendUrl}/api/fetch-emails`, {
+      fetch(`${REACT_APP_SERVER_URL}/api/fetch-emails`, {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -47,11 +49,11 @@ const EmailExtractor = () => {
   };
 
   const handleDownloadFile = () => {
-    window.open(`${BackendUrl}/api/download/${fileNameDown}`, '_blank');
+    window.open(`${REACT_APP_SERVER_URL}/api/download/${fileNameDown}`, '_blank');
   };
 
   const handleDeleteFile = () => {
-    window.open(`${BackendUrl}/api/delete/${fileNameDel}`, '_blank');
+    window.open(`${REACT_APP_SERVER_URL}/api/delete/${fileNameDel}`, '_blank');
   };
 console.log(fileNameDel);
 
